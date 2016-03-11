@@ -13,3 +13,4 @@ Project description
 
 Name of the project: First Blood
 Purpose: To build a Facebook Clients application.
+Group members: Vu Tung Son, Cao Xuan Ngoc, Nghiem Viet Cuong
