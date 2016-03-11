@@ -11,4 +11,5 @@ Students are expected to:
 Project description
 =====================================
 
-*Add your project description here*
+Name of the project: First Blood
+Purpose: To build a Facebook Clients application.
