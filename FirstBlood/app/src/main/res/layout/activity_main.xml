@@ -13,12 +13,12 @@
         android:layout_gravity="center_horizontal"
         android:src="@drawable/logofb"
         android:layout_weight="0.68" />
-
-    <ImageButton
-        android:background="@drawable/button"
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fbbutton"
-        />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp" />
 
 </LinearLayout>
