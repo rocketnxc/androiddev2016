@@ -1,6 +1,7 @@
 package vn.edu.usth.firstblood;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -21,8 +23,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
-    CallbackManager callbackManager;
-    LoginButton fbbutton;
+    private CallbackManager callbackManager;
+    private LoginButton fbbutton;
+    private Intent pagerIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +47,19 @@ public class MainActivity extends AppCompatActivity {
         fbbutton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
+                pagerIntent = new Intent(MainActivity.this, PagerActivity.class);
+                startActivity(pagerIntent);
+                Toast.makeText(MainActivity.this,"Successful", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCancel() {
-
+                Toast.makeText(MainActivity.this,"Login attempt canceled.", Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onError(FacebookException error) {
-
+            public void onError(FacebookException e) {
+                Toast.makeText(MainActivity.this,"Login attempt failed.", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -81,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public static String printKeyHash(Activity context) {
