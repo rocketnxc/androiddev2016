@@ -1,5 +1,6 @@
 package vn.edu.usth.firstblood;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -7,6 +8,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 import vn.edu.usth.firstblood.fragments.FriendListFragment;
 import vn.edu.usth.firstblood.fragments.NewsFeedFragment;
@@ -21,6 +28,7 @@ public class PagerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //enable the icon at the left side of the toolbar
+
 
         //tab layout
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);

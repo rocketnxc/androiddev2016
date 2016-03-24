@@ -4,34 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
-    <ImageView
-        android:id="@+id/pics"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
-        android:layout_alignParentLeft="true"
-        android:contentDescription="Hello World"
-        android:paddingBottom="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-         />
-
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:layout_marginTop="5dp"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/pics"
-        android:layout_toEndOf="@+id/pics" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/countries"
-        android:layout_below="@+id/name"
-        android:layout_toRightOf="@+id/pics"
-        android:layout_toEndOf="@+id/pics" />
+        android:layout_marginTop="5dp"
+        android:textSize="20dp" />
 
 
 </RelativeLayout>

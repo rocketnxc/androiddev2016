@@ -14,6 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,61 +32,16 @@ import vn.edu.usth.firstblood.R;
 
 public class FriendListFragment extends ListFragment {
 
-    // Array of strings storing country names
-    String[] name = new String[] {
-            "Vu Tung Son",
-            "Cao Xuan Ngoc",
-            "Nghiem Viet Cuong",
-            "Vu Tung Son",
-            "Cao Xuan Ngoc",
-            "Nghiem Viet Cuong",
-            "Vu Tung Son",
-            "Cao Xuan Ngoc",
-            "Nghiem Viet Cuong",
-            "Dam Vinh Hung"
-    };
 
-    // Array of integers points to images stored in /res/drawable/
-    int[] pics = new int[]{
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son,
-            R.drawable.son
-    };
 
-    // Array of strings to store currencies
-    String[] countries = new String[]{
-            "India",
-            "Pakistan",
-            "Sri Lanka",
-            "China",
-            "Bangladesh",
-            "Nepal",
-            "Afghanistan",
-            "North Korea",
-            "South Korea",
-            "Japan"
-    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Each row in the list stores country name, currency and flag
+
+
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
-        for(int i=0;i<10;i++){
-            HashMap<String, String> hm = new HashMap<String,String>();
-            hm.put("name", name[i]);
-            hm.put("cons", countries[i]);
-            hm.put("pics", Integer.toString(pics[i]) );
-            aList.add(hm);
-        }
-        String[] from = { "name","cons","pics" };
-        int[] to = { R.id.name,R.id.countries,R.id.pics};
+        String[] from = { "name"};
+        int[] to = { R.id.name};
         SimpleAdapter adapter = new SimpleAdapter(getActivity().getBaseContext(), aList, R.layout.fragment_friend_list, from, to);
 
         setListAdapter(adapter);
