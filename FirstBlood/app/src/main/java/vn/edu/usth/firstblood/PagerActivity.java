@@ -12,18 +12,31 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import vn.edu.usth.firstblood.fragments.FriendListFragment;
 import vn.edu.usth.firstblood.fragments.NewsFeedFragment;
+import vn.edu.usth.firstblood.fragments.UserInfoFragment;
 
 public class PagerActivity extends AppCompatActivity {
-
+    private JSONObject jsonObjectUserInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pager);
+
+        //getting all information from the MainActivity
+        Intent pagerIntent = getIntent();
+        String userInfo = pagerIntent.getStringExtra("JSONUserInfo");
+        try {
+            jsonObjectUserInfo = new JSONObject(userInfo);
+            Log.i("UserInfos2", jsonObjectUserInfo.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,8 +71,9 @@ public class PagerActivity extends AppCompatActivity {
                         NewsFeedFragment newsFeedFragment3 = new NewsFeedFragment();
                         return newsFeedFragment3;
                     case 4:
-                        NewsFeedFragment newsFeedFragment4 = new NewsFeedFragment();
-                        return newsFeedFragment4;
+                        UserInfoFragment userInfoFragment = new UserInfoFragment();
+                        userInfoFragment.setJsonObjectUserInfo(jsonObjectUserInfo);
+                        return userInfoFragment;
                     default:
                         return null;
                 }

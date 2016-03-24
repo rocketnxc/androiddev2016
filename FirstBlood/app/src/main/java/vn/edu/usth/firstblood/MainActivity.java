@@ -27,13 +27,11 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         //to initialize the SDK
         FacebookSdk.sdkInitialize(getApplicationContext());
+        pagerIntent = new Intent(MainActivity.this, PagerActivity.class);
 
         //call CallbackManager.Factory.create to create a callback manager to handle login responses
         callbackManager = CallbackManager.Factory.create();
@@ -60,29 +59,12 @@ public class MainActivity extends AppCompatActivity {
         //initialize the continue button (invisible when no Accesstoken)
         continueButton.setVisibility(View.INVISIBLE);
 
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pagerIntent != null)
-                    startActivity(pagerIntent);
-                else {
-                    pagerIntent = new Intent(MainActivity.this, PagerActivity.class);
-                    RequestName();
-                    RequestFriendList();
-                    startActivity(pagerIntent);
-                }
-
-            }
-        });
-
         //set permissions for using facebook graph
-        fbButton.setReadPermissions("public_profile email user_friends user_photos user_posts");
+        fbButton.setReadPermissions("public_profile email user_friends user_photos user_posts user_birthday user_education_history user_hometown");
 
         //Check if currently access a token, then call Request name to set text for continue button
         if (AccessToken.getCurrentAccessToken() != null) {
             continueButton.setVisibility(View.VISIBLE);
-            RequestName();
-            RequestFriendList();
         }
 
         fbButton.setOnClickListener(new View.OnClickListener() {
@@ -100,12 +82,9 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
 
                 if (AccessToken.getCurrentAccessToken() != null) {
-                    pagerIntent = new Intent(MainActivity.this, PagerActivity.class);
                     Toast.makeText(MainActivity.this, "Successful Login!!", Toast.LENGTH_LONG).show();
                     continueButton.setVisibility(View.VISIBLE);
-                    RequestName();
-                    RequestFriendList();
-                    startActivity(pagerIntent);
+                    RequestUserInfo(pagerIntent);
                 }
             }
 
@@ -117,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException e) {
                 Toast.makeText(MainActivity.this, "Login attempt failed.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestUserInfo(pagerIntent);
             }
         });
 
@@ -192,22 +178,25 @@ public class MainActivity extends AppCompatActivity {
      * Request name and id of the logged-in user
      * Set text of continue button to "Continue as " + name of the user
      */
-    private void RequestName() {
+    private void RequestUserInfo(final Intent intent) {
         /* make the API call */
-        GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(
+        Bundle params = new Bundle();
+        //set fields of information that needed
+        params.putString("fields", "id,picture,about,age_range,birthday,cover,email,education,gender,hometown,name");
+        GraphRequestAsyncTask graphRequest = new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me",
-                null,
+                params,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
                          /* handle the result */
-                        Log.v("LoginActivity", response.toString());
-                        JSONObject item = response.getJSONObject();
                         try {
-                            Log.v("LoginName", item.getString("name"));
-                            continueButton.setText("Continue as " + item.getString("name"));
-
+                            JSONObject jsonObjectUserInfo = response.getJSONObject();
+                            Log.i("UserInfos1", jsonObjectUserInfo.toString());
+                            continueButton.setText("Continue as " + jsonObjectUserInfo.getString("name"));
+                            intent.putExtra("JSONUserInfo", jsonObjectUserInfo.toString());
+                            startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -216,42 +205,4 @@ public class MainActivity extends AppCompatActivity {
         ).executeAsync();
     }
 
-    private void RequestFriendList() {
-/* make the API call */
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me/feed",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                    /* handle the result */
-                        Log.v("FriendsList", response.toString());
-                        try {
-                            JSONArray jsfriendlist = response.getJSONObject().getJSONArray("data");
-                            Log.i("log_tag", jsfriendlist.length() + "");
-                            ArrayList<String> friends = new ArrayList<String>();
-                            try {
-
-                                for (int l=0; l < jsfriendlist.length(); l++) {
-                                    friends.add(jsfriendlist.getJSONObject(l).getString("name"));
-                                    Log.i("NameList", jsfriendlist.getJSONObject(l).getString("name"));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-//                            if (pagerIntent != null)
-//                                pagerIntent.putExtra("jsonfriendlist", jsfriendlist.toString());
-//
-//                            else {
-//                                pagerIntent = new Intent(MainActivity.this, PagerActivity.class);
-//                                pagerIntent.putExtra("jsonfriendlist", jsfriendlist.toString());
-//                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        ).executeAsync();
-    }
 }
