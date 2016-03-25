@@ -22,6 +22,9 @@ import vn.edu.usth.firstblood.fragments.UserInfoFragment;
 
 public class PagerActivity extends AppCompatActivity {
     private JSONObject jsonObjectUserInfo;
+    private JSONObject jsonObjectUserPhoto;
+    private JSONObject jsonObjectUserFeed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +32,18 @@ public class PagerActivity extends AppCompatActivity {
 
         //getting all information from the MainActivity
         Intent pagerIntent = getIntent();
-        String userInfo = pagerIntent.getStringExtra("JSONUserInfo");
+        Bundle extras = pagerIntent.getExtras();
+        String userInfo = extras.getString("JSONUserInfo");
+        String userPhoto = extras.getString("JSONUserPhoto");
+        String userFeed = extras.getString("JSONUserFeed");
+
         try {
             jsonObjectUserInfo = new JSONObject(userInfo);
             Log.i("UserInfos2", jsonObjectUserInfo.toString());
+            jsonObjectUserPhoto = new JSONObject(userPhoto);
+            Log.i("UserPhoto2", jsonObjectUserPhoto.toString());
+            jsonObjectUserFeed = new JSONObject(userFeed);
+            Log.i("UserFeed2", jsonObjectUserFeed.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

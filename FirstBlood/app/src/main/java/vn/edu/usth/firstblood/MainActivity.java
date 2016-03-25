@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle userParams = new Bundle();
         //set fields of information that needed
         userParams.putString("fields", "id,picture,about,age_range,birthday,cover,email,education,gender,hometown,name");
-
+        final Bundle extras = new Bundle();
 
         GraphRequestBatch batch = new GraphRequestBatch(
                 new GraphRequest(
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                                     JSONObject jsonObjectUserInfo = response.getJSONObject();
                                     Log.i("UserInfos1", jsonObjectUserInfo.toString());
                                     continueButton.setText("Continue as " + jsonObjectUserInfo.getString("name"));
-                                    intent.putExtra("JSONUserInfo", jsonObjectUserInfo.toString());
+                                    extras.putString("JSONUserInfo", jsonObjectUserInfo.toString());
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                          /* handle the result */
                                 JSONObject jsonObjectUserInfo = response.getJSONObject();
                                 Log.i("UserPhoto1", jsonObjectUserInfo.toString());
-
+                                extras.putString("JSONUserPhoto", jsonObjectUserInfo.toString());
                             }
                         }
                 ),
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                          /* handle the result */
                                 JSONObject jsonObjectUserInfo = response.getJSONObject();
                                 Log.i("UserFeed1", jsonObjectUserInfo.toString());
-
+                                extras.putString("JSONUserFeed", jsonObjectUserInfo.toString());
                             }
                         }
                 )
@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBatchCompleted(GraphRequestBatch graphRequests) {
                 // Application code for when the batch finishes
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
