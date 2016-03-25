@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import vn.edu.usth.firstblood.fragments.FriendListFragment;
 import vn.edu.usth.firstblood.fragments.NewsFeedFragment;
+import vn.edu.usth.firstblood.fragments.PhotoFragment;
 import vn.edu.usth.firstblood.fragments.UserInfoFragment;
 
 public class PagerActivity extends AppCompatActivity {
@@ -79,8 +80,9 @@ public class PagerActivity extends AppCompatActivity {
                         NewsFeedFragment newsFeedFragment2 = new NewsFeedFragment();
                         return newsFeedFragment2;
                     case 3:
-                        NewsFeedFragment newsFeedFragment3 = new NewsFeedFragment();
-                        return newsFeedFragment3;
+                        PhotoFragment photoFragment = new PhotoFragment();
+                        photoFragment.setJsonObjectUserPhoto(jsonObjectUserPhoto);
+                        return photoFragment;
                     case 4:
                         UserInfoFragment userInfoFragment = new UserInfoFragment();
                         userInfoFragment.setJsonObjectUserInfo(jsonObjectUserInfo);
