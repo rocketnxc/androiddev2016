@@ -20,6 +20,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.appevents.AppEventsLogger;
@@ -27,6 +28,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -180,29 +182,71 @@ public class MainActivity extends AppCompatActivity {
      */
     private void RequestUserInfo(final Intent intent) {
         /* make the API call */
-        Bundle params = new Bundle();
+        Bundle userParams = new Bundle();
         //set fields of information that needed
-        params.putString("fields", "id,picture,about,age_range,birthday,cover,email,education,gender,hometown,name");
-        GraphRequestAsyncTask graphRequest = new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me",
-                params,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
+        userParams.putString("fields", "id,picture,about,age_range,birthday,cover,email,education,gender,hometown,name");
+
+
+        GraphRequestBatch batch = new GraphRequestBatch(
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/me",
+                        userParams,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
                          /* handle the result */
-                        try {
-                            JSONObject jsonObjectUserInfo = response.getJSONObject();
-                            Log.i("UserInfos1", jsonObjectUserInfo.toString());
-                            continueButton.setText("Continue as " + jsonObjectUserInfo.getString("name"));
-                            intent.putExtra("JSONUserInfo", jsonObjectUserInfo.toString());
-                            startActivity(intent);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                try {
+                                    JSONObject jsonObjectUserInfo = response.getJSONObject();
+                                    Log.i("UserInfos1", jsonObjectUserInfo.toString());
+                                    continueButton.setText("Continue as " + jsonObjectUserInfo.getString("name"));
+                                    intent.putExtra("JSONUserInfo", jsonObjectUserInfo.toString());
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                    }
-                }
-        ).executeAsync();
+                ),
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/me/photos",
+                        userParams,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+                         /* handle the result */
+                                JSONObject jsonObjectUserInfo = response.getJSONObject();
+                                Log.i("UserPhoto1", jsonObjectUserInfo.toString());
+
+                            }
+                        }
+                ),
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/me/feed",
+                        null,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+                         /* handle the result */
+                                JSONObject jsonObjectUserInfo = response.getJSONObject();
+                                Log.i("UserFeed1", jsonObjectUserInfo.toString());
+
+                            }
+                        }
+                )
+
+        );
+        batch.addCallback(new GraphRequestBatch.Callback() {
+            @Override
+            public void onBatchCompleted(GraphRequestBatch graphRequests) {
+                // Application code for when the batch finishes
+                startActivity(intent);
+            }
+        });
+        batch.executeAsync();
+
     }
 
 }
